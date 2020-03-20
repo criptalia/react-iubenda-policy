@@ -1,8 +1,20 @@
 // @flow
 import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
 
-export default class Iubenda extends PureComponent {
+type Props = {
+  id: string,
+  styling?: string,
+  children?: string,
+  type?: string
+};
+
+export default class Iubenda extends PureComponent<Props> {
+  static defaultProps = {
+    styling: "nostyle",
+    children: "Privacy Policy",
+    type: "privacy"
+  };
+
   componentDidMount() {
     const script = document.createElement("script");
 
@@ -11,7 +23,7 @@ export default class Iubenda extends PureComponent {
       '!function(e,t){var n=function(){var e=t.createElement("script"),n=t.getElementsByTagName("script")[0];e.src="https://cdn.iubenda.com/iubenda.js",n.parentNode.insertBefore(e,n)};e.addEventListener?e.addEventListener("load",n,!1):e.attachEvent?e.attachEvent("onload",n):e.onload=n}(window,document);';
     script.async = true;
 
-    document.body.appendChild(script);
+    if (document.body != null) document.body.appendChild(script);
   }
 
   render() {
@@ -21,7 +33,7 @@ export default class Iubenda extends PureComponent {
       black: "iubenda-black no-brand iubenda-embed",
       white: "iubenda-white no-brand iubenda-embed"
     };
-    const makeUrl = (prId, prType) => {
+    const makeUrl = (prId = "", prType = "") => {
       if (prType === "cookie") {
         return `https://www.iubenda.com/privacy-policy/${prId}/cookie-policy`;
       }
@@ -32,22 +44,9 @@ export default class Iubenda extends PureComponent {
     };
 
     return (
-      <a href={makeUrl(id, type)} className={styleTypes[styling]}>
+      <a href={makeUrl(id, type)} className={styleTypes[styling || "nostyle"]}>
         {children}
       </a>
     );
   }
 }
-
-Iubenda.propTypes = {
-  id: PropTypes.string.isRequired,
-  styling: PropTypes.string,
-  children: PropTypes.node,
-  type: PropTypes.string
-};
-
-Iubenda.defaultProps = {
-  styling: "nostyle",
-  children: "Privacy Policy",
-  type: "privacy"
-};
